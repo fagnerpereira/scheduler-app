@@ -1,0 +1,48 @@
+<table class="table">
+  <tr>
+    <th>Time</th>
+    <th>Mondey</th>
+    <th>Thursday</th>
+    <th>Wednesday</th>
+    <th>Tuesday</th>
+    <th>Friday</th>
+  </tr>
+  <% for hour in 6..23 %>
+    <tr>
+      <td><%= hour %></td>
+      <% for day in 1..5 %>
+        <% if accessible?(day) %>
+          <% if @week_schedule.present? %>
+            <td>Reservado por <%= current_user %></td>
+          <% else %>
+            <td>
+              <span id='reservedUser<%= "#{day}#{hour}" %>' style="display:none">Reservado por <%= current_user %></span>
+              <%= form_for(@scheduler, html: { id: "form#{day}#{hour}" }, remote: true) do |f| %>
+                <div class="form-group">
+                  <%= f.hidden_field :date, value: scheduled_date(day, hour) %>
+                </div>
+                <%= f.submit "Disponível", class: "btn btn-success", id: "button#{day}#{hour}" %>
+              <% end %>
+            </td>
+          <% end %>
+        <% else %>
+          <td>-</td>
+        <% end %>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<script type="text/javascript">
+  <% for hour in 6..23 %>
+    <% for day in 1..5 %>
+      $( document ).ready(function() {
+        $("#form<%= day %><%= hour %>").on("ajax:success", function(e, data, status, xhr) {
+          $("#form<%= day %><%= hour %>").attr({ "style": "display:none" });
+          $("#reservedUser<%= day %><%= hour %>").attr({ "style": "display:true" });
+        });
+      });
+    <% end %>
+  <% end %>
+
+</script>
