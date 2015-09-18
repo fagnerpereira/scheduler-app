@@ -1,24 +1,16 @@
 class SchedulersController < ApplicationController
+  skip_before_action :verify_authenticity_token
 
   def index
-    day_of_week = Time.now.strftime("%u").to_i
-
-    week_schedule = Scheduler.where("date >= ? and date <= ?", Time.now, Time.now + (5 - day_of_week).days).pluck(:date)
-
-    @disponible_days = []
-
-    week_schedule.each do |day|
-      @disponible_days << "#{day.strftime("%u").to_i}/#{day.strftime("%H").to_i}"
-    end
-
+    @disponible_days = Scheduler.disponible_days
     @scheduler = Scheduler.new
   end
 
   def create
-    parsed_time = DateTime.strptime(scheduler_params[:date], '%d/%m/%y %H')
+    parsed_time = DateTime.strptime(scheduler_params[:date], '%d/%m/%y %H') + 3.hours
     Scheduler.create!(date: parsed_time)
     redirect_to schedulers_url, notice: 'Agendado com sucesso!'
-  rescue => e
+  rescue
     redirect_to schedulers_url, notice: 'Não foi possível efetuar o agendamento!'
   end
 

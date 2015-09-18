@@ -1,8 +1,8 @@
 module SchedulersHelper
 
-  def accessible?(day)
-    return true if today <= day
-    false
+  def accessible?(day, hour)
+    return true if day > today || (day == today && hour > time_now)
+    return false
   end
 
   def scheduled_date(scheduled_day, hour)
@@ -17,6 +17,10 @@ module SchedulersHelper
 
   def today
     Time.now.strftime("%u").to_i
+  end
+
+  def time_now
+    Time.now.strftime("%H").to_i
   end
 end
 

@@ -37,4 +37,6 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'pry'
   gem 'timecop'
+  gem 'factory_girl_rails'
+  gem 'factory_girl'
 end

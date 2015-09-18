@@ -20,4 +20,14 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  labels:
+    hours: Hours
+    monday: Monday
+    thursday: thursday
+    wednesday: Wednesday
+    tuesday: Tuesday
+    friday: Friday
+  texts:
+    reserved_by: Reserved by
+  buttons:
+    disponible: Disponible

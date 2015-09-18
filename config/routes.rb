@@ -3,7 +3,15 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'schedulers#index'
+  devise_scope :user do
+    authenticated :user do
+      root 'schedulers#index', as: :authenticated_root
+    end
+
+    unauthenticated do
+      root 'devise/sessions#new', as: :unauthenticated_root
+    end
+  end
   devise_for :users, controllers: { registrations: "users/registrations" }
   resources :schedulers
   # Example of regular route:

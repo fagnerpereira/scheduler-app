@@ -1,27 +1,27 @@
 <table class="table">
   <tr>
-    <th>Time</th>
-    <th>Mondey</th>
-    <th>Thursday</th>
-    <th>Wednesday</th>
-    <th>Tuesday</th>
-    <th>Friday</th>
+    <th><%= t(:hours, scope: [:labels])%></th>
+    <th><%= t(:moday, scope: [:labels]) %></th>
+    <th><%= t(:thursday, scope: [:labels]) %></th>
+    <th><%= t(:wednesday, scope: [:labels]) %></th>
+    <th><%= t(:tuesday, scope: [:labels]) %></th>
+    <th><%= t(:friday, scope: [:labels]) %></th>
   </tr>
   <% for hour in 6..23 %>
     <tr>
       <td><%= hour %></td>
       <% for day in 1..5 %>
-        <% if accessible?(day) %>
-          <% if @week_schedule.present? %>
-            <td>Reservado por <%= current_user %></td>
+        <% if accessible?(day, hour) %>
+          <% if @disponible_days.include?("#{day}#{hour}") %>
+            <td><%= t(:reserved_by, scope: [:texts]) %> <%= current_user.name %></td>
           <% else %>
             <td>
-              <span id='reservedUser<%= "#{day}#{hour}" %>' style="display:none">Reservado por <%= current_user %></span>
+              <span id='reservedUser<%= "#{day}#{hour}" %>' style="display:none"><%= t(:reserved_by, scope: [:texts]) %><%= current_user.name %></span>
               <%= form_for(@scheduler, html: { id: "form#{day}#{hour}" }, remote: true) do |f| %>
                 <div class="form-group">
                   <%= f.hidden_field :date, value: scheduled_date(day, hour) %>
                 </div>
-                <%= f.submit "Disponível", class: "btn btn-success", id: "button#{day}#{hour}" %>
+                <%= f.submit t(:disponible, scope: [:buttons]), class: "btn btn-success", id: "button#{day}#{hour}" %>
               <% end %>
             </td>
           <% end %>
@@ -37,7 +37,7 @@
   <% for hour in 6..23 %>
     <% for day in 1..5 %>
       $( document ).ready(function() {
-        $("#form<%= day %><%= hour %>").on("ajax:success", function(e, data, status, xhr) {
+        $("#form<%= day %><%= hour %>").on("ajax:success", function() {
           $("#form<%= day %><%= hour %>").attr({ "style": "display:none" });
           $("#reservedUser<%= day %><%= hour %>").attr({ "style": "display:true" });
         });
